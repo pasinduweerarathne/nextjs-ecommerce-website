@@ -21,3 +21,6 @@ img {
 
 /* loading */
 @import url("./loading.css");
+
+/* product */
+@import url("./product.css");
