@@ -1,9 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import React from "react";
-import { decrease, increase } from "../store/actions";
+import React, { useContext } from "react";
+import { decrease, deleteCart, increase } from "../store/actions";
+import { DataContext } from "../store/globalState";
 
 const CartItem = ({ item, dispatch, cart }) => {
+  const { state } = useContext(DataContext);
+  const { modal } = state;
+
   return (
     <tr>
       <td style={{ width: "100px", overflow: "hidden" }}>
@@ -52,7 +56,19 @@ const CartItem = ({ item, dispatch, cart }) => {
         className="align-middle"
         style={{ minWidth: "50px", cursor: "pointer" }}
       >
-        <i className="fa fa-trash-alt" aria-hidden="true"></i>
+        <i
+          className="fa fa-trash-alt text-danger"
+          aria-hidden="true"
+          style={{ fontSize: "18px" }}
+          data-toggle="modal"
+          data-target="#exampleModal"
+          onClick={() =>
+            dispatch({
+              type: "ADD_MODAL",
+              payload: { data: cart, id: item._id, title: item.title },
+            })
+          }
+        ></i>
       </td>
     </tr>
   );
