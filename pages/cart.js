@@ -5,11 +5,24 @@ import { DataContext } from "../store/globalState";
 import CartItem from "../components/CartItem";
 import Link from "next/link";
 import { getData } from "../utils/fetchData";
+import PaypalBtn from "../components/PaypalBtn";
 
 const Cart = () => {
   const { state, dispatch } = useContext(DataContext);
   const { cart, auth } = state;
   const [total, setTotal] = useState(0);
+  const [payment, setPayment] = useState(false);
+  const [mobile, setMobile] = useState("");
+  const [address, setAddress] = useState("");
+
+  const handlePayment = () => {
+    if (!address || !mobile)
+      return dispatch({
+        type: "NOTIFY",
+        payload: { error: "Please add your mobile and address" },
+      });
+    setPayment(true);
+  };
 
   useEffect(() => {
     const getTotal = () => {
@@ -89,6 +102,8 @@ const Cart = () => {
             name="address"
             id="address"
             className="form-control mb-2"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
           />
 
           <label htmlFor="address">Mobile</label>
@@ -97,6 +112,8 @@ const Cart = () => {
             name="mobile"
             id="mobile"
             className="form-control mb-2"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
           />
         </form>
 
@@ -104,9 +121,21 @@ const Cart = () => {
           Totel: <span className="text-info">{total}</span>
         </h3>
 
-        <Link href={auth.user ? "#" : "/signin"}>
-          <a className="btn btn-dark my-2">Proceed with payment</a>
-        </Link>
+        {payment ? (
+          <PaypalBtn
+            total={total}
+            address={address}
+            mobile={mobile}
+            state={state}
+            dispatch={dispatch}
+          />
+        ) : (
+          <Link href={auth.user ? "#!" : "/signin"}>
+            <a className="btn btn-dark my-2" onClick={handlePayment}>
+              Proceed with payment
+            </a>
+          </Link>
+        )}
       </div>
     </div>
   );
