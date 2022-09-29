@@ -1,6 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import { useContext } from "react";
+import { addToCart } from "../store/actions";
+import { DataContext } from "../store/globalState";
 
 const Products = ({ product }) => {
+  const { state, dispatch } = useContext(DataContext);
+  const { cart } = state;
+
   return (
     <div className="card" style={{ width: "18rem" }}>
       <img
@@ -32,6 +39,8 @@ const Products = ({ product }) => {
           <button
             className="btn btn-success"
             style={{ marginLeft: "5px", flex: 1 }}
+            onClick={() => dispatch(addToCart(product, cart))}
+            disabled={product.inStock === 0 ? true : false}
           >
             Buy
           </button>

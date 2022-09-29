@@ -1,10 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import { getData } from "../../utils/fetchData";
 import Head from "next/head";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { DataContext } from "../../store/globalState";
+import { addToCart } from "../../store/actions";
 
 const ProductDetails = ({ product }) => {
   const [tab, setTab] = useState(0);
+  const { state, dispatch } = useContext(DataContext);
+  const { cart } = state;
 
   const isActive = (index) => {
     if (tab === index) return " active";
@@ -57,7 +61,11 @@ const ProductDetails = ({ product }) => {
           {product.content}
         </div>
 
-        <button type="button" className="btn btn-dark my-3 px-5 d-block">
+        <button
+          type="button"
+          className="btn btn-dark my-3 px-5 d-block"
+          onClick={() => dispatch(addToCart(product, cart))}
+        >
           Buy
         </button>
       </div>
